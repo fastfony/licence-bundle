@@ -51,8 +51,10 @@ class ResponseSubscriber implements EventSubscriberInterface
         $checkCount->set(++$counter);
         $cache->save($checkCount);
 
+        $licenceKey = $this->parameterBag->get('fastfony_licence.key');
+
         // We check the licence key remotely only after 20 requests
-        if ($counter > 20 && $this->licenceChecker->isValid($this->parameterBag->get('fastfony_licence.key'))) {
+        if ($counter > 20 && (empty($licenceKey) || !$this->licenceChecker->isValid($licenceKey))) {
             $content = $response->getContent();
             $script = "<script>document.addEventListener('DOMContentLoaded', function(){let o=document.createElement('div');o.style.position='fixed';o.style.top='0';o.style.left='0';o.style.width='100%';o.style.height='100%';o.style.backgroundColor='darkred';o.style.color='yellow';o.style.fontSize='3rem';o.style.display='flex';o.style.flexDirection='column';o.style.justifyContent='center';o.style.alignItems='center';o.style.zIndex='99999';o.innerHTML='<h2>Invalid Fastfony licence key.</h2><p class=\"fs-sm\">Edit <a href=\"/admin/parameters\" class=\"underline\">here</a>.</p>';document.body.appendChild(o);});</script>";
             $content = str_replace('</body>', $script . '</body>', $content);
