@@ -20,4 +20,10 @@ class LicenceChecker
             return true;
         });
     }
+
+    public function generate(string $email): string
+    {
+        // TODO : generate a licence key
+        return 'test-licence-key';
+    }
 }
