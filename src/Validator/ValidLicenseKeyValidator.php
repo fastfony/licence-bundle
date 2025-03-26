@@ -2,31 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Fastfony\LicenceBundle\Validator;
+namespace Fastfony\LicenseBundle\Validator;
 
-use Fastfony\LicenceBundle\Security\LicenceChecker;
+use Fastfony\LicenseBundle\Security\LicenseChecker;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
-class ValidLicenceKeyValidator extends ConstraintValidator
+class ValidLicenseKeyValidator extends ConstraintValidator
 {
     public function __construct(
-        private LicenceChecker $licenceChecker
+        private LicenseChecker $licenseChecker
     ) {
     }
 
     public function validate(mixed $value, Constraint $constraint): void
     {
-        if (!$constraint instanceof ValidLicenceKey) {
-            throw new UnexpectedTypeException($constraint, ValidLicenceKey::class);
+        if (!$constraint instanceof ValidLicenseKey) {
+            throw new UnexpectedTypeException($constraint, ValidLicenseKey::class);
         }
 
         if (null === $value || '' === $value) {
             return;
         }
 
-        if (false === $this->licenceChecker->isValid($value)) {
+        if (false === $this->licenseChecker->isValid($value)) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }

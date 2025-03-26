@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Fastfony\LicenceBundle\EventSubscriber;
+namespace Fastfony\LicenseBundle\EventSubscriber;
 
-use Fastfony\LicenceBundle\Security\LicenceChecker;
+use Fastfony\LicenseBundle\Security\LicenseChecker;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,7 +15,7 @@ class ResponseSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private ParameterBagInterface $parameterBag,
-        private LicenceChecker $licenceChecker,
+        private LicenseChecker $licenseChecker,
     ) {
     }
 
@@ -40,7 +40,7 @@ class ResponseSubscriber implements EventSubscriberInterface
 
         // We test only after 20 requests
         $cache = new FilesystemAdapter();
-        $checkCount = $cache->getItem('licence.check_count');
+        $checkCount = $cache->getItem('license.check_count');
         if (!$checkCount->isHit()) {
             $checkCount->set(0);
             $checkCount->expiresAfter(60);
@@ -51,12 +51,12 @@ class ResponseSubscriber implements EventSubscriberInterface
         $checkCount->set(++$counter);
         $cache->save($checkCount);
 
-        $licenceKey = $this->parameterBag->get('fastfony_licence.key');
+        $licenseKey = $this->parameterBag->get('fastfony_license.key');
 
-        // We check the licence key remotely only after 20 requests
-        if ($counter > 20 && (empty($licenceKey) || !$this->licenceChecker->isValid($licenceKey))) {
+        // We check the license key remotely only after 20 requests
+        if ($counter > 20 && (empty($licenseKey) || !$this->licenseChecker->isValid($licenseKey))) {
             $content = $response->getContent();
-            $script = "<script>document.addEventListener('DOMContentLoaded', function(){let o=document.createElement('div');o.style.position='fixed';o.style.top='0';o.style.left='0';o.style.width='100%';o.style.height='100%';o.style.backgroundColor='darkred';o.style.color='yellow';o.style.fontSize='3rem';o.style.display='flex';o.style.flexDirection='column';o.style.justifyContent='center';o.style.alignItems='center';o.style.zIndex='99999';o.innerHTML='<h2>Invalid Fastfony licence key.</h2><p class=\"fs-sm\">Edit <a href=\"/admin/parameters\" class=\"underline\">here</a>.</p>';document.body.appendChild(o);});</script>";
+            $script = "<script>document.addEventListener('DOMContentLoaded', function(){let o=document.createElement('div');o.style.position='fixed';o.style.top='0';o.style.left='0';o.style.width='100%';o.style.height='100%';o.style.backgroundColor='darkred';o.style.color='yellow';o.style.fontSize='3rem';o.style.display='flex';o.style.flexDirection='column';o.style.justifyContent='center';o.style.alignItems='center';o.style.zIndex='99999';o.innerHTML='<h2>Invalid Fastfony license key.</h2><p class=\"fs-sm\">Edit <a href=\"/admin/parameters\" class=\"underline\">here</a>.</p>';document.body.appendChild(o);});</script>";
             $content = str_replace('</body>', $script . '</body>', $content);
 
             $response->setContent($content);

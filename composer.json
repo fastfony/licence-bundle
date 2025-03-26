@@ -1,6 +1,6 @@
 {
-    "name": "fastfony/licence-bundle",
-    "description": "Licence bundle checker for Fastfony",
+    "name": "fastfony/license-bundle",
+    "description": "License bundle checker for Fastfony",
     "type": "symfony-bundle",
     "require": {
         "php": ">=8.2",
@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Fastfony\\LicenceBundle\\": "src/"
+            "Fastfony\\LicenseBundle\\": "src/"
         }
     },
     "license": "MIT",

@@ -1,9 +1,9 @@
-# Fastfony licence checker bundle
+# Fastfony license checker bundle
 
 ## Install
 
 ```sh
-composer require fastfony/licence-bundle
+composer require fastfony/license-bundle
 ```
 
 Add the bundle to your `config/bundles.php`:
@@ -18,6 +18,6 @@ return [
 Create a `config/packages/fastfony_license.yaml` file:
 
 ```yaml
-fastfony_licence:
+fastfony_license:
     key: '%env(database:FASTFONY_LICENCE_KEY)%'
 ```

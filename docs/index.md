@@ -1,1 +1,1 @@
-This bundle is used in Fastfony (licence MIT) and Fastfony-pro (proprietary licence).
+This bundle is used in Fastfony (license MIT) and Fastfony-pro (proprietary license).

@@ -1,23 +1,23 @@
 services:
-  fastfony_licence.response_subscriber:
-    class: Fastfony\LicenceBundle\EventSubscriber\ResponseSubscriber
+  fastfony_license.response_subscriber:
+    class: Fastfony\LicenseBundle\EventSubscriber\ResponseSubscriber
     arguments:
       $parameterBag: "@parameter_bag"
-      $licenceChecker: "@fastfony_licence.security.licence_checker"
+      $licenseChecker: "@fastfony_license.security.license_checker"
     tags:
         - { name: kernel.event_subscriber }
 
-  fastfony_licence.security.licence_checker:
-    class: Fastfony\LicenceBundle\Security\LicenceChecker
+  fastfony_license.security.license_checker:
+    class: Fastfony\LicenseBundle\Security\LicenseChecker
 
-  fastfony_licence.validator.valid_licence_key:
-    class: Fastfony\LicenceBundle\Validator\ValidLicenceKeyValidator
+  fastfony_license.validator.valid_license_key:
+    class: Fastfony\LicenseBundle\Validator\ValidLicenseKeyValidator
     arguments:
-      $licenceChecker: "@fastfony_licence.security.licence_checker"
+      $licenseChecker: "@fastfony_license.security.license_checker"
     tags:
       - { name: validator.constraint_validator }
 
-  fastfony_licence.constraint.valid_licence_key:
-    class: Fastfony\LicenceBundle\Validator\ValidLicenceKey
+  fastfony_license.constraint.valid_license_key:
+    class: Fastfony\LicenseBundle\Validator\ValidLicenseKey
     tags:
       - { name: validator.constraint }
