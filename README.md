@@ -19,5 +19,5 @@ Create a `config/packages/fastfony_license.yaml` file:
 
 ```yaml
 fastfony_license:
-    key: '%env(database:FASTFONY_LICENCE_KEY)%'
+    key: '%env(database:FASTFONY_LICENSE_KEY)%'
 ```
