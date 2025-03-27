@@ -38,7 +38,7 @@ class ResponseSubscriber implements EventSubscriberInterface
             return;
         }
 
-        // We test only after 20 requests
+        // We test only after 10 requests
         $cache = new FilesystemAdapter();
         $checkCount = $cache->getItem('license.check_count');
         if (!$checkCount->isHit()) {
@@ -53,10 +53,10 @@ class ResponseSubscriber implements EventSubscriberInterface
 
         $licenseKey = $this->parameterBag->get('fastfony_license.key');
 
-        // We check the license key remotely only after 20 requests
-        if ($counter > 20 && (empty($licenseKey) || !$this->licenseChecker->isValid($licenseKey))) {
+        // We check the license key remotely only after 10 requests
+        if ($counter > 10 && (empty($licenseKey) || !$this->licenseChecker->isValid($licenseKey))) {
             $content = $response->getContent();
-            $script = "<script>document.addEventListener('DOMContentLoaded', function(){let o=document.createElement('div');o.style.position='fixed';o.style.top='0';o.style.left='0';o.style.width='100%';o.style.height='100%';o.style.backgroundColor='darkred';o.style.color='yellow';o.style.fontSize='3rem';o.style.display='flex';o.style.flexDirection='column';o.style.justifyContent='center';o.style.alignItems='center';o.style.zIndex='99999';o.innerHTML='<h2>Invalid Fastfony license key.</h2><p class=\"fs-sm\">Edit <a href=\"/admin/parameters\" class=\"underline\">here</a>.</p>';document.body.appendChild(o);});</script>";
+            $script = "<script>document.addEventListener('DOMContentLoaded', function(){let o=document.createElement('<div class=\"fixed top-0 left-0 w-full bg-red-600 text-white p-4 shadow-lg text-center font-bold z-50\">Invalid Fastfony license key. <a href=\"/admin/parameters\" class=\"underline hover:text-red-200\">Edit here</a></div><div class=\"fixed top-0 left-0 w-full h-full bg-white/10 backdrop-blur-sm z-40\"></div>');document.body.appendChild(o);});</script>";
             $content = str_replace('</body>', $script . '</body>', $content);
 
             $response->setContent($content);
