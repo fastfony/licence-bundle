@@ -54,6 +54,7 @@ class LicenseChecker
 
             $validityInCache->expiresAfter($expireTime);
             $validityInCache->set($validity);
+            $cache->save($validityInCache);
         }
 
         return $validityInCache->get();
