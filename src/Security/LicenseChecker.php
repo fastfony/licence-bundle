@@ -30,6 +30,7 @@ class LicenseChecker
                     [
                         'headers' => [
                             'Accept' => 'application/json',
+                            'Referer' => $_SERVER['HTTP_HOST'],
                         ],
                     ]
                 );
