@@ -30,10 +30,11 @@ class ResponseSubscriber implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         $route = $event->getRequest()->attributes->get('_route');
-        // We test only on HTML responses and not on installation page
+        // We test only on HTML responses and not on installation page and api
         if (!$response instanceof Response
             || !str_contains($response->headers->get('Content-Type'), 'text/html')
             || ($route && str_contains($event->getRequest()->attributes->get('_route'), 'installation'))
+            || ($route && str_contains($event->getRequest()->attributes->get('_route'), 'api'))
         ) {
             return;
         }
@@ -56,7 +57,7 @@ class ResponseSubscriber implements EventSubscriberInterface
         // We check the license key remotely only after 10 requests
         if ($counter > 10 && (empty($licenseKey) || !$this->licenseChecker->isValid($licenseKey))) {
             $content = $response->getContent();
-            $script = "<script>document.addEventListener('DOMContentLoaded', function(){let o=document.createElement('<div class=\"fixed top-0 left-0 w-full bg-red-600 text-white p-4 shadow-lg text-center font-bold z-50\">Invalid Fastfony license key. <a href=\"/admin/parameters\" class=\"underline hover:text-red-200\">Edit here</a></div><div class=\"fixed top-0 left-0 w-full h-full bg-white/10 backdrop-blur-sm z-40\"></div>');document.body.appendChild(o);});</script>";
+            $script = "<script>document.addEventListener('DOMContentLoaded', function(){document.body.insertAdjacentHTML('afterbegin', '<div class=\"fixed top-0 left-0 w-full bg-red-600 text-white p-4 shadow-lg text-center font-bold z-50\">Invalid Fastfony license key. <a href=\"/admin/parameters\" class=\"underline hover:text-red-200\">Edit here</a></div><div class=\"fixed top-0 left-0 w-full h-full bg-white/10 backdrop-blur-sm z-40\"></div>');});</script>";
             $content = str_replace('</body>', $script . '</body>', $content);
 
             $response->setContent($content);
