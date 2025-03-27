@@ -7,7 +7,6 @@ namespace Fastfony\LicenseBundle\Security;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -19,8 +18,10 @@ class LicenseChecker
     public function isValid(string $licenseKey): bool
     {
         $cache = new FilesystemAdapter();
-        return $cache->get('validity-'.$licenseKey, function (ItemInterface $item) use ($licenseKey): bool {
-            $item->expiresAfter(60);
+        $validityInCache = $cache->getItem('validity-'.$licenseKey);
+        $expireTime = 60;
+        $validity = true;
+        if (!$validityInCache->isHit() || $validityInCache->get() === false) {
             $client = HttpClient::create();
 
             try {
@@ -41,16 +42,21 @@ class LicenseChecker
 
                 $license = $response->toArray();
                 if (isset($license['validUntil']) && $license['validUntil']) {
-                    $item->expiresAt(new \DateTime($license['validUntil']));
+                    $expireTime = strtotime($license['validUntil']) - time();
                 } elseif ($license['active']) {
-                    $item->expiresAfter(3600*24);
+                    $expireTime = 3600*24;
                 }
 
-                return $license['active'] ?? true; // True by default for benefit of the doubt
+                $validity = $license['active'];
             } catch (TransportException) {
-                return true;
+                // True by default for benefit of the doubt
             }
-        });
+
+            $validityInCache->expiresAfter($expireTime);
+            $validityInCache->set($validity);
+        }
+
+        return $validityInCache->get();
     }
 
     /**
