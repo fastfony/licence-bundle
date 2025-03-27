@@ -57,7 +57,7 @@ class ResponseSubscriber implements EventSubscriberInterface
         // We check the license key remotely only after 10 requests
         if ($counter > 10 && (empty($licenseKey) || !$this->licenseChecker->isValid($licenseKey))) {
             $content = $response->getContent();
-            $script = "<script>document.addEventListener('DOMContentLoaded', function(){document.body.insertAdjacentHTML('afterbegin', '<div class=\"fixed top-0 left-0 w-full bg-red-600 text-white p-4 shadow-lg text-center font-bold z-50\">Invalid Fastfony license key. <a href=\"/admin/parameters\" class=\"underline hover:text-red-200\">Edit here</a></div><div class=\"fixed top-0 left-0 w-full h-full bg-white/10 backdrop-blur-sm z-40\"></div>');});</script>";
+            $script = "<script>document.addEventListener('DOMContentLoaded', function(){document.body.insertAdjacentHTML('afterbegin', '<div class=\"fixed top-0 left-0 w-full bg-red-600 text-white p-4 shadow-lg text-center font-bold z-50\">Invalid Fastfony license key. <a href=\"/admin?routeName=admin_parameters\" class=\"underline hover:text-red-200\">Edit here</a></div><div class=\"fixed top-0 left-0 w-full h-full bg-white/10 backdrop-blur-sm z-40\"></div>');});</script>";
             $content = str_replace('</body>', $script . '</body>', $content);
 
             $response->setContent($content);

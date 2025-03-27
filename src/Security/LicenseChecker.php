@@ -39,7 +39,7 @@ class LicenseChecker
                 }
 
                 $license = $response->toArray();
-                if ($license['validUntil']) {
+                if (isset($license['validUntil']) && $license['validUntil']) {
                     $item->expiresAt(new \DateTime($license['validUntil']));
                 } elseif ($license['active']) {
                     $item->expiresAfter(3600*24);
