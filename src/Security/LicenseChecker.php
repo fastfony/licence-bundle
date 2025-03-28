@@ -31,7 +31,7 @@ class LicenseChecker
                     [
                         'headers' => [
                             'Accept' => 'application/json',
-                            'Referer' => $_SERVER['HTTP_HOST'],
+                            'Referer' => sprintf('%s (%s)', $_SERVER['HTTP_HOST'] ?? gethostname(), $_SERVER['REMOTE_ADDR'] ?? gethostbyname(gethostname()))
                         ],
                     ]
                 );
@@ -78,7 +78,7 @@ class LicenseChecker
             [
                 'headers' => [
                     'Accept' => 'application/json',
-                    'Referer' => $_SERVER['HTTP_HOST'],
+                    'Referer' => sprintf('%s (%s)', $_SERVER['HTTP_HOST'] ?? gethostname(), $_SERVER['REMOTE_ADDR'] ?? gethostbyname(gethostname()))
                 ],
                 'json' => [
                     'email' => $email,
