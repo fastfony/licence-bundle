@@ -74,12 +74,12 @@ class LicenseChecker
         $client = HttpClient::create();
         $response = $client->request(
             'POST',
-            'https://fastfony.com/api/license_requests/',
+            'https://fastfony.com/api/license_requests',
             [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
-                'body' => [
+                'json' => [
                     'email' => $email,
                     'product' => ['slug' => $productSlug],
                 ],
